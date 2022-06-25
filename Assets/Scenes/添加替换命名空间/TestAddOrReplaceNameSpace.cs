@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
@@ -89,21 +88,14 @@ public class TestAddOrReplaceNamespace : ScriptableObject {
         SyntaxTree tree = CSharpSyntaxTree.ParseText(sampleCode);
         CompilationUnitSyntax root = (CompilationUnitSyntax)tree.GetRoot();
 
-        /*foreach (var member in root.Members) {
-            if(member is NamespaceDeclarationSyntax) {
-                var ns = (NamespaceDeclarationSyntax)member;
-                var nns = ns.WithName(QualifiedName(IdentifierName("MiniGame"), IdentifierName(ns.Name.ToString())));
-                root = root.ReplaceNode(ns, nns);
-            }
-        }*/
-        
         var collector = new NamespaceCollector();
         collector.Visit(root);
-        foreach (var ns in collector.namespaces) {
-            var nns = ns.WithName(QualifiedName(IdentifierName("MiniGame"), IdentifierName(ns.Name.ToString())));
-            root = root.ReplaceNode(ns, nns);
-        }
 
+        root = root.ReplaceNodes(collector.namespaces, (a, b) => {
+            // 改为 MiniGame.xx.xxx
+            a = a.WithName(QualifiedName(IdentifierName("MiniGame"), IdentifierName(a.Name.ToString())));
+            return a;
+        });
         Debug.Log(root.NormalizeWhitespace().ToFullString());
     }
 }
