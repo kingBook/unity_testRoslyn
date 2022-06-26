@@ -3,25 +3,12 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-namespace Helo {
-    public enum SayType {
-        A,
-        B
+using UnityEngine.SceneManagement;
+
+public class HelloWorld : MonoBehaviour {
+
+    private void Start() {
+        SceneManager.LoadScene("Scenes/Main");
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Scenes/Title");
     }
-
-    [RequireComponent(typeof(Transform))]
-    public class HelloWorld : MonoBehaviour {
-
-        private GameObject m_effect;
-
-        private void Start() {
-            
-        }
-    }
-
-    namespace Helo_1 {
-    }
-}
-namespace Helo1 {
-
 }
